@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Braden Kinnes — Mechanical Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  /* ---------------------------------------------------------
+     TOKENS
+  --------------------------------------------------------- */
+  :root{
+    --paper:      #FAFAF8;
+    --surface:    #FFFFFF;
+    --ink:        #1C1C1C;
+    --graphite:   #5B5F63;
+    --line:       #D9D5C7;
+    --accent:     #E2531F;
+    --accent-ink: #FFFFFF;
+
+    --font-head: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    --measure: 640px;
+    --gutter: clamp(24px, 5vw, 64px);
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:    #17181A;
+      --surface:  #1E2022;
+      --ink:      #F2F1ED;
+      --graphite: #A6A9AC;
+      --line:     #35373A;
+      --accent:   #FF6B3D;
+      --accent-ink:#17181A;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:    #17181A;
+    --surface:  #1E2022;
+    --ink:      #F2F1ED;
+    --graphite: #A6A9AC;
+    --line:     #35373A;
+    --accent:   #FF6B3D;
+    --accent-ink:#17181A;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection{ background: var(--accent); color: var(--accent-ink); }
+
+  a{ color: var(--ink); text-decoration-color: var(--line); text-underline-offset: 3px; }
+  a:hover{ text-decoration-color: var(--accent); }
+
+  img{ max-width: 100%; display:block; }
+
+  h1,h2,h3{
+    font-family: var(--font-head);
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .wrap{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+
+  .measure{ max-width: var(--measure); }
+
+  /* ---------------------------------------------------------
+     DRAFTING-SHEET CHROME
+     small corner ticks + hairline rules, echoing a title block
+  --------------------------------------------------------- */
+  .sheet{
+    position: relative;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 56px 0;
+  }
+  .sheet::before, .sheet::after{
+    content:"";
+    position:absolute;
+    width:9px; height:9px;
+    border: 1px solid var(--graphite);
+    opacity:.5;
+  }
+  .sheet::before{ top:-1px; left: var(--gutter); border-right:none; border-bottom:none; }
+  .sheet::after{ bottom:-1px; right: var(--gutter); border-left:none; border-top:none; }
+
+  .sheet + .sheet{ border-top: none; }
+
+  .index-label{
+    display:block;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--graphite);
+    margin-bottom: 10px;
+  }
+
+  /* ---------------------------------------------------------
+     HEADER
+  --------------------------------------------------------- */
+  header.sheet{ padding-top: 72px; padding-bottom: 72px; }
+
+  .header-grid{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    gap: 48px;
+    align-items: end;
+  }
+
+  h1.name{
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    line-height: 1.05;
+  }
+
+  .role{
+    margin-top: 14px;
+    color: var(--graphite);
+    font-size: 1.05rem;
+    max-width: 46ch;
+  }
+
+  .contact-row{
+    margin-top: 28px;
+    display:flex;
+    flex-wrap:wrap;
+    gap: 6px 22px;
+    font-size: 14px;
+    color: var(--graphite);
+  }
+  .contact-row a{ color: var(--graphite); }
+
+  /* portrait placeholder */
+  .portrait{
+    width: 168px;
+    height: 168px;
+    border: 1px dashed var(--line);
+    border-radius: 2px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    color: var(--graphite);
+    font-size: 12px;
+    text-align:center;
+    padding: 12px;
+    background: var(--surface);
+  }
+  .portrait img{ width:100%; height:100%; object-fit:cover; border-radius:2px; }
+
+  @media (max-width: 640px){
+    .header-grid{ grid-template-columns: 1fr; }
+    .portrait{ width: 96px; height: 96px; }
+  }
+
+  /* ---------------------------------------------------------
+     SECTION HEADINGS
+  --------------------------------------------------------- */
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .section-head h2{ font-size: 1.5rem; }
+  .section-head .count{ color: var(--graphite); font-size: 14px; }
+
+  /* ---------------------------------------------------------
+     EDUCATION
+  --------------------------------------------------------- */
+  .edu-row{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+  }
+  .edu-row:last-child{ border-bottom: 1px solid var(--line); }
+  .edu-school{ font-weight: 600; }
+  .edu-detail{ color: var(--graphite); font-size: 14px; margin-top: 4px; }
+  .edu-date{ color: var(--graphite); font-size: 14px; white-space: nowrap; }
+
+  /* ---------------------------------------------------------
+     PROJECTS
+  --------------------------------------------------------- */
+  .project{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap: 36px;
+    padding: 40px 0;
+    border-top: 1px solid var(--line);
+  }
+  .project:last-child{ border-bottom: 1px solid var(--line); }
+
+  @media (max-width: 720px){
+    .project{ grid-template-columns: 1fr; }
+  }
+
+  .project-figure{
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: 1px dashed var(--line);
+    border-radius: 2px;
+    background: var(--surface);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--graphite);
+    font-size: 12px;
+    text-align:center;
+    padding: 12px;
+  }
+  .project-figure img{ width:100%; height:100%; object-fit:cover; border-radius:2px; }
+
+  .project-num{
+    font-family: var(--font-head);
+    color: var(--accent);
+    font-size: 14px;
+    margin-bottom: 6px;
+    display:block;
+  }
+
+  .project-title{ font-size: 1.15rem; margin-bottom: 4px; }
+  .project-meta{ color: var(--graphite); font-size: 13px; margin-bottom: 14px; }
+
+  .project ul{
+    margin: 0;
+    padding-left: 18px;
+  }
+  .project li{ margin-bottom: 6px; }
+  .project li::marker{ color: var(--accent); }
+
+  .project-link{
+    display:inline-block;
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+  }
+
+  /* ---------------------------------------------------------
+     EXPERIENCE
+  --------------------------------------------------------- */
+  .job{
+    padding: 26px 0;
+    border-top: 1px solid var(--line);
+  }
+  .job:last-child{ border-bottom: 1px solid var(--line); }
+
+  .job-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .job-title{ font-weight: 600; }
+  .job-org{ color: var(--graphite); }
+  .job-date{ color: var(--graphite); font-size: 14px; white-space: nowrap; }
+
+  .job ul{
+    margin: 14px 0 0;
+    padding-left: 18px;
+    color: var(--ink);
+  }
+  .job li{ margin-bottom: 6px; }
+  .job li::marker{ color: var(--accent); }
+
+  /* ---------------------------------------------------------
+     ACTIVITIES / GALLERY STRIP
+  --------------------------------------------------------- */
+  .gallery{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+  @media (max-width: 720px){
+    .gallery{ grid-template-columns: repeat(2, 1fr); }
+  }
+  .gallery-slot{
+    aspect-ratio: 1;
+    border: 1px dashed var(--line);
+    border-radius: 2px;
+    background: var(--surface);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--graphite);
+    font-size: 11px;
+    text-align:center;
+    padding: 8px;
+  }
+  .gallery-slot img{ width:100%; height:100%; object-fit:cover; border-radius:2px; }
+
+  .tag-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 10px;
+  }
+  .tag{
+    font-size: 13px;
+    color: var(--graphite);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 6px 12px;
+  }
+
+  /* ---------------------------------------------------------
+     FOOTER
+  --------------------------------------------------------- */
+  footer{
+    padding: 40px 0 56px;
+  }
+  .footer-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: var(--graphite);
+    font-size: 13px;
+  }
+  .footer-row a{ color: var(--graphite); }
+
+</style>
+</head>
+<body>
+
+  <!-- =========================================================
+       HEADER
+       Swap the "portrait" box below for a real photo of yourself:
+       <div class="portrait"><img src="images/portrait.jpg" alt="Braden Kinnes"></div>
+  ========================================================== -->
+  <header class="sheet">
+    <div class="wrap">
+      <div class="header-grid">
+        <div>
+          <h1 class="name">Braden Kinnes</h1>
+          <p class="role">Mechanical Engineering Technology student building hands-on hardware — from an autonomous rover to a patent-pending consumer device.</p>
+          <div class="contact-row">
+            <a href="mailto:Bkinnes03@gmail.com">Bkinnes03@gmail.com</a>
+            <span>303-598-7355</span>
+            <a href="#" target="_blank">LinkedIn</a>
+            <a href="#" target="_blank">GitHub</a>
+          </div>
+        </div>
+        <div class="portrait">
+          Add photo<br>of yourself
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       EDUCATION
+  ========================================================== -->
+  <section class="sheet" id="education">
+    <div class="wrap measure">
+      <span class="index-label">01 — Education</span>
+      <div class="edu-row">
+        <div>
+          <div class="edu-school">Colorado Mesa University, Grand Junction, CO</div>
+          <div class="edu-detail">B.S., Mechanical Engineering Technology · GPA 3.02 · Provost's List, Fall '25 &amp; Spring '25</div>
+        </div>
+        <div class="edu-date">Expected Spring 2027</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       PROJECTS
+       Each project has a placeholder image box — replace with:
+       <div class="project-figure"><img src="images/rover.jpg" alt="Rover"></div>
+       Duplicate a .project block to add more projects.
+  ========================================================== -->
+  <section class="sheet" id="projects">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Projects</h2>
+        <span class="count">02 — Coursework &amp; independent study</span>
+      </div>
+
+      <div class="project">
+        <div class="project-figure">Photo / render<br>of S.C.O.R.E. device</div>
+        <div>
+          <span class="project-num">01</span>
+          <div class="project-title">S.C.O.R.E.</div>
+          <div class="project-meta">Independent Study, ENGR 495 · Jan–May 2026</div>
+          <ul>
+            <li>Co-led a team designing a compact, waterproof device that promotes cleanliness and competition in the bathroom</li>
+            <li>Device is patent pending</li>
+            <li>Won first place at the CMU student showcase</li>
+            <li>Researched waterproofing materials and their chemical reactions with urine and other harsh substances</li>
+            <li>Applied packaging engineering techniques to fit circuits and hardware inside a confined enclosure</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="project-figure">Photo / render<br>of Rover</div>
+        <div>
+          <span class="project-num">02</span>
+          <div class="project-title">Autonomous Rover</div>
+          <div class="project-meta">Integration II, ENGR 385 · Jan–May 2026</div>
+          <ul>
+            <li>Designed and built an autonomous rover with RF communication, object detection, and GPS</li>
+            <li>Developed and debugged onboard control code</li>
+            <li>Built skills in circuit design and microcontroller integration</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="project-figure">Photo / render<br>of Sand Plotter Table</div>
+        <div>
+          <span class="project-num">03</span>
+          <div class="project-title">Sand Plotter Table</div>
+          <div class="project-meta">Integration I, ENGR 345 · Aug–Dec 2025</div>
+          <ul>
+            <li>Designed and built a 2-axis sand plotter table using stepper motors and Arduino-based controls</li>
+            <li>Developed and debugged the plotter's control code</li>
+            <li>Documented the build process on a dedicated project site</li>
+          </ul>
+          <a class="project-link" href="https://www.coloradomesa.edu/~bskinnes" target="_blank">View project site →</a>
+        </div>
+      </div>
+
+      <!-- ADD MORE PROJECTS: duplicate a .project div above this comment -->
+
+    </div>
+  </section>
+
+  <!-- =========================================================
+       EXPERIENCE
+  ========================================================== -->
+  <section class="sheet" id="experience">
+    <div class="wrap measure">
+      <span class="index-label">03 — Experience</span>
+
+      <div class="job">
+        <div class="job-head">
+          <div>
+            <span class="job-title">Server / Host</span> · <span class="job-org">Outback Steakhouse, Grand Junction, CO</span>
+          </div>
+          <div class="job-date">Mar 2024 – Present</div>
+        </div>
+        <ul>
+          <li>Promoted from host to server; sharpened communication, multitasking, and customer service skills</li>
+          <li>Worked effectively in a high-pressure, team-dependent environment</li>
+          <li>Consistently ranked near the top of weekly liquor and dessert sales</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-head">
+          <div>
+            <span class="job-title">Tech III</span> · <span class="job-org">Powderhorn Ski Resort, Mesa, CO</span>
+          </div>
+          <div class="job-date">Nov 2022 – Present</div>
+        </div>
+        <ul>
+          <li>Performed precision epoxy work for edge replacement and repair</li>
+          <li>Base grinding and ski structure restoration</li>
+          <li>Waxing and edge sharpening; certified Rossignol and Salomon technician</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================
+       ACTIVITIES + GALLERY
+       Swap gallery-slot boxes for real photos of you skiing,
+       hiking, at the showcase, etc.
+  ========================================================== -->
+  <section class="sheet" id="activities">
+    <div class="wrap measure">
+      <span class="index-label">04 — Activities &amp; interests</span>
+
+      <div class="gallery">
+        <div class="gallery-slot">Photo</div>
+        <div class="gallery-slot">Photo</div>
+        <div class="gallery-slot">Photo</div>
+        <div class="gallery-slot">Photo</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag">Varsity two-sport athlete, HS 2017–2021</span>
+        <span class="tag">Young Life Christian Camp volunteer, 2021</span>
+        <span class="tag">Special Olympics volunteer, 2022–2024</span>
+        <span class="tag">Colorado Mesa Ski &amp; Board Club, 2025</span>
+        <span class="tag">Skiing, hiking, fishing</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       FOOTER
+  ========================================================== -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-row">
+        <span>Braden Kinnes — Grand Junction, CO</span>
+        <span><a href="mailto:Bkinnes03@gmail.com">Bkinnes03@gmail.com</a> · <a href="#" target="_blank">LinkedIn</a> · <a href="#" target="_blank">GitHub</a></span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
