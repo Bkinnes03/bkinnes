@@ -172,6 +172,43 @@
   }
 
   /* ---------------------------------------------------------
+     TABS
+  --------------------------------------------------------- */
+  .tabbar{
+    padding: 0;
+  }
+  .tablist{
+    display:flex;
+    gap: clamp(24px, 4vw, 48px);
+    list-style:none;
+    margin:0;
+    padding:0;
+    overflow-x:auto;
+  }
+  .tab{
+    background:none;
+    border:none;
+    font-family: var(--font-head);
+    font-size: 1rem;
+    color: var(--graphite);
+    padding: 22px 0 20px;
+    cursor:pointer;
+    white-space:nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .tab:hover{ color: var(--ink); }
+  .tab:focus-visible{ outline: 2px solid var(--accent); outline-offset: 4px; }
+  .tab[aria-selected="true"]{
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+  }
+  .tab .tab-num{ color: var(--accent); margin-right: 8px; font-size: 13px; }
+
+  .panel{ display:none; }
+  .panel.is-active{ display:block; }
+
+  /* ---------------------------------------------------------
      SECTION HEADINGS
   --------------------------------------------------------- */
   .section-head{
@@ -257,6 +294,19 @@
     text-decoration: none;
     border-bottom: 1px solid var(--accent);
   }
+
+  /* ---------------------------------------------------------
+     EMPTY STATE (personal projects, until filled in)
+  --------------------------------------------------------- */
+  .empty-state{
+    border: 1px dashed var(--line);
+    border-radius: 2px;
+    padding: 48px var(--gutter);
+    text-align:center;
+    color: var(--graphite);
+  }
+  .empty-state p{ margin: 0 auto; max-width: 44ch; }
+  .empty-state .project-link{ margin-top: 18px; }
 
   /* ---------------------------------------------------------
      EXPERIENCE
@@ -373,147 +423,200 @@
   </header>
 
   <!-- =========================================================
-       EDUCATION
+       TABS
+       Three panels: About Me, School Projects, Personal Projects.
+       JS at the bottom handles switching + keyboard arrows.
   ========================================================== -->
-  <section class="sheet" id="education">
-    <div class="wrap measure">
-      <span class="index-label">01 — Education</span>
-      <div class="edu-row">
-        <div>
-          <div class="edu-school">Colorado Mesa University, Grand Junction, CO</div>
-          <div class="edu-detail">B.S., Mechanical Engineering Technology · GPA 3.02 · Provost's List, Fall '25 &amp; Spring '25</div>
-        </div>
-        <div class="edu-date">Expected Spring 2027</div>
-      </div>
+  <nav class="sheet tabbar" aria-label="Portfolio sections">
+    <div class="wrap">
+      <ul class="tablist" role="tablist">
+        <li role="presentation">
+          <button class="tab" role="tab" id="tab-about" aria-controls="panel-about" aria-selected="true" data-panel="panel-about">
+            <span class="tab-num">01</span>About me
+          </button>
+        </li>
+        <li role="presentation">
+          <button class="tab" role="tab" id="tab-school" aria-controls="panel-school" aria-selected="false" tabindex="-1" data-panel="panel-school">
+            <span class="tab-num">02</span>School projects
+          </button>
+        </li>
+        <li role="presentation">
+          <button class="tab" role="tab" id="tab-personal" aria-controls="panel-personal" aria-selected="false" tabindex="-1" data-panel="panel-personal">
+            <span class="tab-num">03</span>Personal projects
+          </button>
+        </li>
+      </ul>
     </div>
-  </section>
+  </nav>
 
   <!-- =========================================================
-       PROJECTS
+       PANEL: ABOUT ME
+       Education, experience, activities/interests.
+  ========================================================== -->
+  <div class="panel is-active" id="panel-about" role="tabpanel" aria-labelledby="tab-about" tabindex="0">
+
+    <section class="sheet" id="education">
+      <div class="wrap measure">
+        <span class="index-label">Education</span>
+        <div class="edu-row">
+          <div>
+            <div class="edu-school">Colorado Mesa University, Grand Junction, CO</div>
+            <div class="edu-detail">B.S., Mechanical Engineering Technology · GPA 3.02 · Provost's List, Fall '25 &amp; Spring '25</div>
+          </div>
+          <div class="edu-date">Expected Spring 2027</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet" id="experience">
+      <div class="wrap measure">
+        <span class="index-label">Experience</span>
+
+        <div class="job">
+          <div class="job-head">
+            <div>
+              <span class="job-title">Server / Host</span> · <span class="job-org">Outback Steakhouse, Grand Junction, CO</span>
+            </div>
+            <div class="job-date">Mar 2024 – Present</div>
+          </div>
+          <ul>
+            <li>Promoted from host to server; sharpened communication, multitasking, and customer service skills</li>
+            <li>Worked effectively in a high-pressure, team-dependent environment</li>
+            <li>Consistently ranked near the top of weekly liquor and dessert sales</li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-head">
+            <div>
+              <span class="job-title">Tech III</span> · <span class="job-org">Powderhorn Ski Resort, Mesa, CO</span>
+            </div>
+            <div class="job-date">Nov 2022 – Present</div>
+          </div>
+          <ul>
+            <li>Performed precision epoxy work for edge replacement and repair</li>
+            <li>Base grinding and ski structure restoration</li>
+            <li>Waxing and edge sharpening; certified Rossignol and Salomon technician</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Swap gallery-slot boxes for real photos of you skiing, hiking, at the showcase, etc. -->
+    <section class="sheet" id="activities">
+      <div class="wrap measure">
+        <span class="index-label">Activities &amp; interests</span>
+
+        <div class="gallery">
+          <div class="gallery-slot">Photo</div>
+          <div class="gallery-slot">Photo</div>
+          <div class="gallery-slot">Photo</div>
+          <div class="gallery-slot">Photo</div>
+        </div>
+
+        <div class="tag-row">
+          <span class="tag">Varsity two-sport athlete, HS 2017–2021</span>
+          <span class="tag">Young Life Christian Camp volunteer, 2021</span>
+          <span class="tag">Special Olympics volunteer, 2022–2024</span>
+          <span class="tag">Colorado Mesa Ski &amp; Board Club, 2025</span>
+          <span class="tag">Skiing, hiking, fishing</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- =========================================================
+       PANEL: SCHOOL PROJECTS
        Each project has a placeholder image box — replace with:
        <div class="project-figure"><img src="images/rover.jpg" alt="Rover"></div>
        Duplicate a .project block to add more projects.
   ========================================================== -->
-  <section class="sheet" id="projects">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Projects</h2>
-        <span class="count">02 — Coursework &amp; independent study</span>
-      </div>
-
-      <div class="project">
-        <div class="project-figure">Photo / render<br>of S.C.O.R.E. device</div>
-        <div>
-          <span class="project-num">01</span>
-          <div class="project-title">S.C.O.R.E.</div>
-          <div class="project-meta">Independent Study, ENGR 495 · Jan–May 2026</div>
-          <ul>
-            <li>Co-led a team designing a compact, waterproof device that promotes cleanliness and competition in the bathroom</li>
-            <li>Device is patent pending</li>
-            <li>Won first place at the CMU student showcase</li>
-            <li>Researched waterproofing materials and their chemical reactions with urine and other harsh substances</li>
-            <li>Applied packaging engineering techniques to fit circuits and hardware inside a confined enclosure</li>
-          </ul>
+  <div class="panel" id="panel-school" role="tabpanel" aria-labelledby="tab-school" tabindex="0">
+    <section class="sheet">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>School projects</h2>
+          <span class="count">Coursework &amp; independent study</span>
         </div>
-      </div>
 
-      <div class="project">
-        <div class="project-figure">Photo / render<br>of Rover</div>
-        <div>
-          <span class="project-num">02</span>
-          <div class="project-title">Autonomous Rover</div>
-          <div class="project-meta">Integration II, ENGR 385 · Jan–May 2026</div>
-          <ul>
-            <li>Designed and built an autonomous rover with RF communication, object detection, and GPS</li>
-            <li>Developed and debugged onboard control code</li>
-            <li>Built skills in circuit design and microcontroller integration</li>
-          </ul>
+        <div class="project">
+          <div class="project-figure">Photo / render<br>of S.C.O.R.E. device</div>
+          <div>
+            <span class="project-num">01</span>
+            <div class="project-title">S.C.O.R.E.</div>
+            <div class="project-meta">Independent Study, ENGR 495 · Jan–May 2026</div>
+            <ul>
+              <li>Co-led a team designing a compact, waterproof device that promotes cleanliness and competition in the bathroom</li>
+              <li>Device is patent pending</li>
+              <li>Won first place at the CMU student showcase</li>
+              <li>Researched waterproofing materials and their chemical reactions with urine and other harsh substances</li>
+              <li>Applied packaging engineering techniques to fit circuits and hardware inside a confined enclosure</li>
+            </ul>
+          </div>
         </div>
-      </div>
 
-      <div class="project">
-        <div class="project-figure">Photo / render<br>of Sand Plotter Table</div>
-        <div>
-          <span class="project-num">03</span>
-          <div class="project-title">Sand Plotter Table</div>
-          <div class="project-meta">Integration I, ENGR 345 · Aug–Dec 2025</div>
-          <ul>
-            <li>Designed and built a 2-axis sand plotter table using stepper motors and Arduino-based controls</li>
-            <li>Developed and debugged the plotter's control code</li>
-            <li>Documented the build process on a dedicated project site</li>
-          </ul>
-          <a class="project-link" href="https://www.coloradomesa.edu/~bskinnes" target="_blank">View project site →</a>
+        <div class="project">
+          <div class="project-figure">Photo / render<br>of Rover</div>
+          <div>
+            <span class="project-num">02</span>
+            <div class="project-title">Autonomous Rover</div>
+            <div class="project-meta">Integration II, ENGR 385 · Jan–May 2026</div>
+            <ul>
+              <li>Designed and built an autonomous rover with RF communication, object detection, and GPS</li>
+              <li>Developed and debugged onboard control code</li>
+              <li>Built skills in circuit design and microcontroller integration</li>
+            </ul>
+          </div>
         </div>
+
+        <div class="project">
+          <div class="project-figure">Photo / render<br>of Sand Plotter Table</div>
+          <div>
+            <span class="project-num">03</span>
+            <div class="project-title">Sand Plotter Table</div>
+            <div class="project-meta">Integration I, ENGR 345 · Aug–Dec 2025</div>
+            <ul>
+              <li>Designed and built a 2-axis sand plotter table using stepper motors and Arduino-based controls</li>
+              <li>Developed and debugged the plotter's control code</li>
+              <li>Documented the build process on a dedicated project site</li>
+            </ul>
+            <a class="project-link" href="https://www.coloradomesa.edu/~bskinnes" target="_blank">View project site →</a>
+          </div>
+        </div>
+
+        <!-- ADD MORE SCHOOL PROJECTS: duplicate a .project div above this comment -->
+
       </div>
-
-      <!-- ADD MORE PROJECTS: duplicate a .project div above this comment -->
-
-    </div>
-  </section>
+    </section>
+  </div>
 
   <!-- =========================================================
-       EXPERIENCE
+       PANEL: PERSONAL PROJECTS
+       Nothing from the resume lives here yet — replace this
+       empty state with .project blocks (same markup as the
+       School Projects panel) as you build things on your own.
   ========================================================== -->
-  <section class="sheet" id="experience">
-    <div class="wrap measure">
-      <span class="index-label">03 — Experience</span>
-
-      <div class="job">
-        <div class="job-head">
-          <div>
-            <span class="job-title">Server / Host</span> · <span class="job-org">Outback Steakhouse, Grand Junction, CO</span>
-          </div>
-          <div class="job-date">Mar 2024 – Present</div>
+  <div class="panel" id="panel-personal" role="tabpanel" aria-labelledby="tab-personal" tabindex="0">
+    <section class="sheet">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Personal projects</h2>
+          <span class="count">Outside of coursework</span>
         </div>
-        <ul>
-          <li>Promoted from host to server; sharpened communication, multitasking, and customer service skills</li>
-          <li>Worked effectively in a high-pressure, team-dependent environment</li>
-          <li>Consistently ranked near the top of weekly liquor and dessert sales</li>
-        </ul>
-      </div>
 
-      <div class="job">
-        <div class="job-head">
-          <div>
-            <span class="job-title">Tech III</span> · <span class="job-org">Powderhorn Ski Resort, Mesa, CO</span>
-          </div>
-          <div class="job-date">Nov 2022 – Present</div>
+        <div class="empty-state">
+          <p>Nothing here yet. Add a project the same way the School Projects panel is built — a photo box, a title, and a short list of what you did.</p>
         </div>
-        <ul>
-          <li>Performed precision epoxy work for edge replacement and repair</li>
-          <li>Base grinding and ski structure restoration</li>
-          <li>Waxing and edge sharpening; certified Rossignol and Salomon technician</li>
-        </ul>
+
+        <!-- ADD PERSONAL PROJECTS: copy a .project block from the
+             School Projects panel above, paste it in place of the
+             .empty-state div, and delete the empty-state div. -->
+
       </div>
-
-    </div>
-  </section>
-
-  <!-- =========================================================
-       ACTIVITIES + GALLERY
-       Swap gallery-slot boxes for real photos of you skiing,
-       hiking, at the showcase, etc.
-  ========================================================== -->
-  <section class="sheet" id="activities">
-    <div class="wrap measure">
-      <span class="index-label">04 — Activities &amp; interests</span>
-
-      <div class="gallery">
-        <div class="gallery-slot">Photo</div>
-        <div class="gallery-slot">Photo</div>
-        <div class="gallery-slot">Photo</div>
-        <div class="gallery-slot">Photo</div>
-      </div>
-
-      <div class="tag-row">
-        <span class="tag">Varsity two-sport athlete, HS 2017–2021</span>
-        <span class="tag">Young Life Christian Camp volunteer, 2021</span>
-        <span class="tag">Special Olympics volunteer, 2022–2024</span>
-        <span class="tag">Colorado Mesa Ski &amp; Board Club, 2025</span>
-        <span class="tag">Skiing, hiking, fishing</span>
-      </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
   <!-- =========================================================
        FOOTER
@@ -526,6 +629,39 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    (function(){
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+
+      function activate(tab, giveFocus){
+        tabs.forEach(function(t){
+          var isActive = t === tab;
+          t.setAttribute('aria-selected', isActive);
+          t.tabIndex = isActive ? 0 : -1;
+          var panel = document.getElementById(t.getAttribute('data-panel'));
+          panel.classList.toggle('is-active', isActive);
+        });
+        if (giveFocus) tab.focus();
+        history.replaceState(null, '', '#' + tab.getAttribute('data-panel').replace('panel-',''));
+      }
+
+      tabs.forEach(function(tab, i){
+        tab.addEventListener('click', function(){ activate(tab, false); });
+        tab.addEventListener('keydown', function(e){
+          var next;
+          if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+          if (e.key === 'ArrowLeft')  next = tabs[(i - 1 + tabs.length) % tabs.length];
+          if (next){ e.preventDefault(); activate(next, true); }
+        });
+      });
+
+      // Deep-link support: #school or #personal opens that tab on load
+      var hash = window.location.hash.replace('#', '');
+      var matched = tabs.find(function(t){ return t.getAttribute('data-panel') === 'panel-' + hash; });
+      if (matched) activate(matched, false);
+    })();
+  </script>
 
 </body>
 </html>
